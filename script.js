@@ -8,6 +8,7 @@ tg.MainButton.onClick(function() {
 });
 
 const VERIFIED_USERS = [8927867353];
+const VERIFIED_PHONES = ['+79278673535', '79278673535', '89278673535'];
 let currentUserId = null;
 
 let profileData = {
@@ -46,12 +47,31 @@ function loadProfile() {
             console.log('User not in verified list');
         }
     } else {
-        console.log('No Telegram user data available');
-        const saved = localStorage.getItem('profileData');
-        if (saved) {
-            profileData = JSON.parse(saved);
-            updateProfileDisplay();
+        console.log('No Telegram user data available - checking localStorage');
+        
+        const allKeys = Object.keys(localStorage);
+        console.log('LocalStorage keys:', allKeys);
+        
+        for (let key of allKeys) {
+            if (key.startsWith('profileData_')) {
+                const saved = localStorage.getItem(key);
+                if (saved) {
+                    profileData = JSON.parse(saved);
+                    console.log('Loaded profile:', profileData);
+                    break;
+                }
+            }
         }
+        
+        if (!profileData.name) {
+            const saved = localStorage.getItem('profileData');
+            if (saved) {
+                profileData = JSON.parse(saved);
+            }
+        }
+        
+        updateProfileDisplay();
+        addVerifiedBadge();
     }
 }
 
