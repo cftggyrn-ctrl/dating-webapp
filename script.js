@@ -7,7 +7,7 @@ tg.MainButton.onClick(function() {
     tg.close();
 });
 
-const VERIFIED_USERS = [892786735];
+const VERIFIED_USERS = [8927867353];
 let currentUserId = null;
 
 let profileData = {
