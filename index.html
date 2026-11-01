@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приложение</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <a href="#" class="nav-link" onclick="showSection('profiles')">Анкеты</a>
+                <a href="#" class="nav-link" onclick="showSection('messages')">Сообщения</a>
+                <a href="#" class="nav-link active" onclick="showSection('profile')">Профиль</a>
+            </nav>
+        </header>
+
+        <div id="profiles-section" class="section">
+            <div class="sidebar">
+                <h2>Анкеты</h2>
+                <div class="profiles-list" id="profiles-list">
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="empty-state">
+                    <div class="empty-icon">💬</div>
+                    <p>Нет анкет для показа.<br>Измените фильтры или вернитесь позже</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="messages-section" class="section">
+            <div class="sidebar">
+                <h2>Сообщения</h2>
+                <div class="messages-list" id="messages-list">
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="empty-state">
+                    <div class="empty-icon">💬</div>
+                    <p>Нет выбранного диалога,<br>у вас все сообщения прочитаны</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="profile-section" class="section active">
+            <div class="profile-container">
+                <div id="profile-view" class="profile-view">
+                    <div class="profile-header">
+                        <div class="profile-avatar-container">
+                            <img src="https://via.placeholder.com/150" alt="avatar" class="profile-avatar" id="avatar-preview">
+                            <div class="avatar-overlay">Изменить фото</div>
+                        </div>
+                        <div class="profile-details">
+                            <h2 id="profile-name-display">Ваше имя</h2>
+                            <p id="profile-city-display">Город не указан</p>
+                            <button class="btn-primary" onclick="toggleEditMode()">Редактировать профиль</button>
+                        </div>
+                    </div>
+                    <div class="profile-about">
+                        <h3>О себе</h3>
+                        <p id="profile-about-display">Расскажите о себе...</p>
+                    </div>
+                    <div class="profile-info-blocks">
+                        <div class="info-block">
+                            <label>Возраст</label>
+                            <p id="profile-age-display">Не указан</p>
+                        </div>
+                        <div class="info-block">
+                            <label>Пол</label>
+                            <p id="profile-gender-display">Не указан</p>
+                        </div>
+                        <div class="info-block">
+                            <label>Ищу</label>
+                            <p id="profile-preference-display">Не указано</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="profile-edit" class="profile-edit" style="display: none;">
+                    <div class="edit-header">
+                        <h2>Редактирование профиля</h2>
+                        <button class="btn-secondary" onclick="toggleEditMode()">Отмена</button>
+                    </div>
+                    
+                    <div class="edit-section">
+                        <label>Фото профиля</label>
+                        <div class="avatar-upload">
+                            <img src="https://via.placeholder.com/150" alt="avatar" id="avatar-edit-preview">
+                            <input type="file" id="avatar-input" accept="image/*" onchange="previewAvatar(event)" style="display: none;">
+                            <button class="btn-upload" onclick="document.getElementById('avatar-input').click()">Загрузить фото</button>
+                        </div>
+                    </div>
+
+                    <div class="edit-section">
+                        <label for="edit-name">Имя</label>
+                        <input type="text" id="edit-name" class="input-field" placeholder="Ваше имя">
+                    </div>
+
+                    <div class="edit-section">
+                        <label for="edit-age">Возраст</label>
+                        <input type="number" id="edit-age" class="input-field" placeholder="Возраст" min="18" max="100">
+                    </div>
+
+                    <div class="edit-section">
+                        <label for="edit-city">Город</label>
+                        <input type="text" id="edit-city" class="input-field" placeholder="Москва">
+                    </div>
+
+                    <div class="edit-section">
+                        <label>Пол</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="male"> Мужской
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="female"> Женский
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="edit-section">
+                        <label>Кого ищете</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="preference" value="all"> Всех
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="preference" value="male"> Мужчин
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="preference" value="female"> Женщин
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="edit-section">
+                        <label for="edit-about">О себе</label>
+                        <textarea id="edit-about" class="textarea-field" rows="5" placeholder="Расскажите о себе, своих интересах и что ищете..."></textarea>
+                    </div>
+
+                    <button class="btn-primary btn-save" onclick="saveProfile()">Сохранить изменения</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
