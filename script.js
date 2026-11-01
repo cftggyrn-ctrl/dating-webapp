@@ -7,11 +7,8 @@ tg.MainButton.onClick(function() {
     tg.close();
 });
 
-const VERIFIED_USERS = [8927867353];
-const VERIFIED_PHONES = ['+79278673535', '79278673535', '89278673535'];
 const VERIFICATION_CODE = '123123';
 let currentUserId = null;
-let isVerified = false;
 
 let profileData = {
     name: '',
@@ -20,65 +17,67 @@ let profileData = {
     gender: '',
     preference: '',
     about: '',
-    avatar: 'https://via.placeholder.com/150'
+    avatar: 'https://via.placeholder.com/150',
+    userId: null,
+    phone: null,
+    registered: false
 };
 
 function loadProfile() {
-    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        currentUserId = tg.initDataUnsafe.user.id;
+    const saved = localStorage.getItem('profileData');
+    
+    if (saved) {
+        profileData = JSON.parse(saved);
         
-        const storageKey = 'profileData_' + currentUserId;
-        const saved = localStorage.getItem(storageKey);
-        
-        if (saved) {
-            profileData = JSON.parse(saved);
+        if (profileData.registered && profileData.userId) {
+            document.getElementById('registration-form').style.display = 'none';
+            document.getElementById('registration-success').style.display = 'none';
+            document.getElementById('profile-view').style.display = 'block';
+            updateProfileDisplay();
         } else {
-            profileData.name = tg.initDataUnsafe.user.first_name || '';
+            document.getElementById('registration-form').style.display = 'block';
+            document.getElementById('profile-view').style.display = 'none';
         }
     } else {
-        const saved = localStorage.getItem('profileData');
-        if (saved) {
-            profileData = JSON.parse(saved);
-        }
+        document.getElementById('registration-form').style.display = 'block';
+        document.getElementById('profile-view').style.display = 'none';
+    }
+}
+
+function registerUser() {
+    const phone = document.getElementById('phone-input').value.trim();
+    
+    if (!phone) {
+        tg.showAlert('Введите номер телефона');
+        return;
     }
     
-    isVerified = localStorage.getItem('isVerified') === 'true';
+    const userId = Date.now().toString();
     
+    profileData.phone = phone;
+    profileData.userId = userId;
+    profileData.registered = true;
+    
+    localStorage.setItem('profileData', JSON.stringify(profileData));
+    
+    tg.sendData(JSON.stringify({
+        action: 'register',
+        phone: phone,
+        userId: userId
+    }));
+    
+    document.getElementById('registration-form').style.display = 'none';
+    document.getElementById('registration-success').style.display = 'block';
+    document.getElementById('user-id-display').textContent = userId;
+}
+
+function showProfile() {
+    document.getElementById('registration-success').style.display = 'none';
+    document.getElementById('profile-view').style.display = 'block';
     updateProfileDisplay();
-    
-    if (isVerified) {
-        addVerifiedBadge();
-    }
 }
 
-function addVerifiedBadge() {
-    const nameDisplay = document.getElementById('profile-name-display');
-    
-    if (nameDisplay && !nameDisplay.querySelector('.verified-badge')) {
-        const badge = document.createElement('img');
-        badge.src = 'verify.png';
-        badge.className = 'verified-badge';
-        badge.alt = 'Verified';
-        nameDisplay.appendChild(badge);
-    }
-}
 
-function checkVerificationCode() {
-    const code = document.getElementById('verification-code').value.trim();
-    
-    if (code === VERIFICATION_CODE) {
-        isVerified = true;
-        localStorage.setItem('isVerified', 'true');
-        addVerifiedBadge();
-        document.getElementById('verification-message').textContent = '✅ Аккаунт верифицирован!';
-        document.getElementById('verification-message').style.color = '#4ade80';
-    } else if (code.length > 0) {
-        document.getElementById('verification-message').textContent = '❌ Неверный код';
-        document.getElementById('verification-message').style.color = '#f87171';
-    } else {
-        document.getElementById('verification-message').textContent = '';
-    }
-}
 
 function updateProfileDisplay() {
     const nameDisplay = document.getElementById('profile-name-display');
