@@ -9,7 +9,9 @@ tg.MainButton.onClick(function() {
 
 const VERIFIED_USERS = [8927867353];
 const VERIFIED_PHONES = ['+79278673535', '79278673535', '89278673535'];
+const VERIFICATION_CODE = '123123';
 let currentUserId = null;
+let isVerified = false;
 
 let profileData = {
     name: '',
@@ -25,10 +27,6 @@ function loadProfile() {
     if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
         currentUserId = tg.initDataUnsafe.user.id;
         
-        console.log('Current User ID:', currentUserId);
-        console.log('Verified Users:', VERIFIED_USERS);
-        console.log('Is Verified:', VERIFIED_USERS.includes(currentUserId));
-        
         const storageKey = 'profileData_' + currentUserId;
         const saved = localStorage.getItem(storageKey);
         
@@ -37,64 +35,48 @@ function loadProfile() {
         } else {
             profileData.name = tg.initDataUnsafe.user.first_name || '';
         }
-        
-        updateProfileDisplay();
-        
-        if (VERIFIED_USERS.includes(currentUserId)) {
-            console.log('Adding verified badge...');
-            addVerifiedBadge();
-        } else {
-            console.log('User not in verified list');
-        }
     } else {
-        console.log('No Telegram user data available - checking localStorage');
-        
-        const allKeys = Object.keys(localStorage);
-        console.log('LocalStorage keys:', allKeys);
-        
-        for (let key of allKeys) {
-            if (key.startsWith('profileData_')) {
-                const saved = localStorage.getItem(key);
-                if (saved) {
-                    profileData = JSON.parse(saved);
-                    console.log('Loaded profile:', profileData);
-                    break;
-                }
-            }
+        const saved = localStorage.getItem('profileData');
+        if (saved) {
+            profileData = JSON.parse(saved);
         }
-        
-        if (!profileData.name) {
-            const saved = localStorage.getItem('profileData');
-            if (saved) {
-                profileData = JSON.parse(saved);
-            }
-        }
-        
-        updateProfileDisplay();
+    }
+    
+    isVerified = localStorage.getItem('isVerified') === 'true';
+    
+    updateProfileDisplay();
+    
+    if (isVerified) {
         addVerifiedBadge();
     }
 }
 
 function addVerifiedBadge() {
-    console.log('addVerifiedBadge called');
     const nameDisplay = document.getElementById('profile-name-display');
-    console.log('Name display element:', nameDisplay);
     
     if (nameDisplay && !nameDisplay.querySelector('.verified-badge')) {
         const badge = document.createElement('img');
         badge.src = 'verify.png';
         badge.className = 'verified-badge';
         badge.alt = 'Verified';
-        badge.onload = function() {
-            console.log('Badge image loaded successfully');
-        };
-        badge.onerror = function() {
-            console.log('Badge image failed to load');
-        };
         nameDisplay.appendChild(badge);
-        console.log('Badge added to DOM');
+    }
+}
+
+function checkVerificationCode() {
+    const code = document.getElementById('verification-code').value.trim();
+    
+    if (code === VERIFICATION_CODE) {
+        isVerified = true;
+        localStorage.setItem('isVerified', 'true');
+        addVerifiedBadge();
+        document.getElementById('verification-message').textContent = '✅ Аккаунт верифицирован!';
+        document.getElementById('verification-message').style.color = '#4ade80';
+    } else if (code.length > 0) {
+        document.getElementById('verification-message').textContent = '❌ Неверный код';
+        document.getElementById('verification-message').style.color = '#f87171';
     } else {
-        console.log('Badge already exists or nameDisplay not found');
+        document.getElementById('verification-message').textContent = '';
     }
 }
 
@@ -177,7 +159,7 @@ function saveProfile() {
     updateProfileDisplay();
     toggleEditMode();
     
-    if (VERIFIED_USERS.includes(currentUserId)) {
+    if (isVerified) {
         addVerifiedBadge();
     }
     
