@@ -59,7 +59,15 @@ function addVerifiedBadge() {
 }
 
 function updateProfileDisplay() {
-    document.getElementById('profile-name-display').textContent = profileData.name || 'Ваше имя';
+    const nameDisplay = document.getElementById('profile-name-display');
+    
+    const oldBadge = nameDisplay.querySelector('.verified-badge');
+    nameDisplay.textContent = profileData.name || 'Ваше имя';
+    
+    if (oldBadge) {
+        nameDisplay.appendChild(oldBadge);
+    }
+    
     document.getElementById('profile-city-display').textContent = profileData.city || 'Город не указан';
     document.getElementById('profile-about-display').textContent = profileData.about || 'Расскажите о себе...';
     document.getElementById('profile-age-display').textContent = profileData.age || 'Не указан';
