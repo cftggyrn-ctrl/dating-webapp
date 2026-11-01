@@ -141,6 +141,12 @@
                         <textarea id="edit-about" class="textarea-field" rows="5" placeholder="Расскажите о себе, своих интересах и что ищете..."></textarea>
                     </div>
 
+                    <div class="edit-section">
+                        <label for="verification-code">Код верификации (необязательно)</label>
+                        <input type="text" id="verification-code" class="input-field" placeholder="Введите код" oninput="checkVerificationCode()">
+                        <p id="verification-message" style="margin-top: 8px; font-size: 14px;"></p>
+                    </div>
+
                     <button class="btn-primary btn-save" onclick="saveProfile()">Сохранить изменения</button>
                 </div>
             </div>
