@@ -191,6 +191,17 @@ nav {
 
 .profile-details h2 {
     margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.verified-badge {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 6px;
 }
 
 .profile-details p {
