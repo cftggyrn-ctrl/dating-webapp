@@ -7,6 +7,9 @@ tg.MainButton.onClick(function() {
     tg.close();
 });
 
+const VERIFIED_USERS = [892786735];
+let currentUserId = null;
+
 let profileData = {
     name: '',
     age: '',
@@ -18,10 +21,40 @@ let profileData = {
 };
 
 function loadProfile() {
-    const saved = localStorage.getItem('profileData');
-    if (saved) {
-        profileData = JSON.parse(saved);
+    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+        currentUserId = tg.initDataUnsafe.user.id;
+        
+        const storageKey = 'profileData_' + currentUserId;
+        const saved = localStorage.getItem(storageKey);
+        
+        if (saved) {
+            profileData = JSON.parse(saved);
+        } else {
+            profileData.name = tg.initDataUnsafe.user.first_name || '';
+        }
+        
         updateProfileDisplay();
+        
+        if (VERIFIED_USERS.includes(currentUserId)) {
+            addVerifiedBadge();
+        }
+    } else {
+        const saved = localStorage.getItem('profileData');
+        if (saved) {
+            profileData = JSON.parse(saved);
+            updateProfileDisplay();
+        }
+    }
+}
+
+function addVerifiedBadge() {
+    const nameDisplay = document.getElementById('profile-name-display');
+    if (nameDisplay && !nameDisplay.querySelector('.verified-badge')) {
+        const badge = document.createElement('img');
+        badge.src = 'verify.png';
+        badge.className = 'verified-badge';
+        badge.alt = 'Verified';
+        nameDisplay.appendChild(badge);
     }
 }
 
@@ -90,10 +123,15 @@ function saveProfile() {
     const prefRadio = document.querySelector('input[name="preference"]:checked');
     if (prefRadio) profileData.preference = prefRadio.value;
     
-    localStorage.setItem('profileData', JSON.stringify(profileData));
+    const storageKey = currentUserId ? 'profileData_' + currentUserId : 'profileData';
+    localStorage.setItem(storageKey, JSON.stringify(profileData));
     
     updateProfileDisplay();
     toggleEditMode();
+    
+    if (VERIFIED_USERS.includes(currentUserId)) {
+        addVerifiedBadge();
+    }
     
     tg.showAlert('Профиль успешно сохранен!');
 }
