@@ -47,6 +47,26 @@
 
         <div id="profile-section" class="section active">
             <div class="profile-container">
+                <div id="registration-form" class="registration-form" style="display: none;">
+                    <h2>Регистрация</h2>
+                    <p>Для начала работы поделитесь своим номером телефона</p>
+                    
+                    <div class="form-group">
+                        <label for="phone-input">Номер телефона</label>
+                        <input type="tel" id="phone-input" class="input-field" placeholder="+7 (999) 123-45-67">
+                    </div>
+                    
+                    <button class="btn-primary" onclick="registerUser()">Зарегистрироваться</button>
+                </div>
+
+                <div id="registration-success" class="registration-success" style="display: none;">
+                    <div class="success-icon">✅</div>
+                    <h2>Вы зарегистрированы!</h2>
+                    <p>Ваш уникальный ID:</p>
+                    <div class="user-id" id="user-id-display"></div>
+                    <button class="btn-primary" onclick="showProfile()">Перейти к профилю</button>
+                </div>
+
                 <div id="profile-view" class="profile-view">
                     <div class="profile-header">
                         <div class="profile-avatar-container">
