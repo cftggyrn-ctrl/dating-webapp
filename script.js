@@ -24,6 +24,10 @@ function loadProfile() {
     if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
         currentUserId = tg.initDataUnsafe.user.id;
         
+        console.log('Current User ID:', currentUserId);
+        console.log('Verified Users:', VERIFIED_USERS);
+        console.log('Is Verified:', VERIFIED_USERS.includes(currentUserId));
+        
         const storageKey = 'profileData_' + currentUserId;
         const saved = localStorage.getItem(storageKey);
         
@@ -36,9 +40,13 @@ function loadProfile() {
         updateProfileDisplay();
         
         if (VERIFIED_USERS.includes(currentUserId)) {
+            console.log('Adding verified badge...');
             addVerifiedBadge();
+        } else {
+            console.log('User not in verified list');
         }
     } else {
+        console.log('No Telegram user data available');
         const saved = localStorage.getItem('profileData');
         if (saved) {
             profileData = JSON.parse(saved);
@@ -48,13 +56,25 @@ function loadProfile() {
 }
 
 function addVerifiedBadge() {
+    console.log('addVerifiedBadge called');
     const nameDisplay = document.getElementById('profile-name-display');
+    console.log('Name display element:', nameDisplay);
+    
     if (nameDisplay && !nameDisplay.querySelector('.verified-badge')) {
         const badge = document.createElement('img');
         badge.src = 'verify.png';
         badge.className = 'verified-badge';
         badge.alt = 'Verified';
+        badge.onload = function() {
+            console.log('Badge image loaded successfully');
+        };
+        badge.onerror = function() {
+            console.log('Badge image failed to load');
+        };
         nameDisplay.appendChild(badge);
+        console.log('Badge added to DOM');
+    } else {
+        console.log('Badge already exists or nameDisplay not found');
     }
 }
 
