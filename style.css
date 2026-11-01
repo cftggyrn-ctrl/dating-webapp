@@ -197,11 +197,13 @@ nav {
 }
 
 .verified-badge {
-    width: 18px;
-    height: 18px;
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 6px;
+    width: 24px !important;
+    height: 24px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    margin-left: 8px !important;
+    margin-right: 4px !important;
+    object-fit: contain !important;
 }
 
 .profile-details p {
