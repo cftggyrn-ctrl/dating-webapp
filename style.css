@@ -465,3 +465,54 @@ nav {
     text-align: center;
     color: #b0b3b8;
 }
+
+
+.registration-form,
+.registration-success {
+    text-align: center;
+    max-width: 400px;
+    margin: 60px auto;
+    padding: 40px;
+    background: #242736;
+    border-radius: 16px;
+}
+
+.registration-form h2,
+.registration-success h2 {
+    margin-bottom: 16px;
+    color: #e4e6eb;
+}
+
+.registration-form p,
+.registration-success p {
+    color: #b0b3b8;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 24px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #e4e6eb;
+    font-weight: 500;
+}
+
+.success-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.user-id {
+    font-size: 24px;
+    font-weight: bold;
+    color: #8b5cf6;
+    padding: 20px;
+    background: #2d3142;
+    border-radius: 12px;
+    margin: 20px 0;
+    letter-spacing: 2px;
+}
